@@ -8,7 +8,7 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-const roundedCorners = new Buffer(
+const roundedCorners = Buffer.from(
     '<svg><rect x="0" y="0" width="200" height="200" rx="100" ry="100"/></svg>'
 );
 
@@ -23,7 +23,10 @@ async function askQuestion() {
 async function transformImage(inputFile, outputFile) {    
     return sharp(inputFile)
         .resize(200, 200)
-        .overlayWith(roundedCorners, { cutout: true })
+        .composite([{
+            input: roundedCorners,
+            blend: 'dest-in'
+        }])
         .toFile(outputFile);
 }
 
